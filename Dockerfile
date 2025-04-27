@@ -9,15 +9,18 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
-
 WORKDIR /app
+
+RUN apt update && apt install -y unzip
+
 COPY . /app
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-# For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
+RUN unzip -P 'pymazda-backup.zip' pymazda-enc.zip && \
+  python -m pip install ./pymazda && \
+  rm -rf pymazda pymazda-*.dist-info pymazda-enc.zip
+
+RUN python -m pip install -r requirements.txt
+
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
