@@ -16,8 +16,9 @@ RUN apt update && apt install -y unzip
 COPY . /app
 
 RUN unzip -P 'pymazda-backup.zip' pymazda-enc.zip && \
-  python -m pip install ./pymazda && \
-  rm -rf pymazda pymazda-*.dist-info pymazda-enc.zip
+  mv pymazda /usr/local/lib/python3.9/site-packages/ && \
+  mv pymazda-0.3.11.dist-info /usr/local/lib/python3.9/site-packages/ && \
+  rm -rf pymazda-enc.zip
 
 RUN python -m pip install -r requirements.txt
 
